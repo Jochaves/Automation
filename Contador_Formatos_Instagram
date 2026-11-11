@@ -1,0 +1,51 @@
+/**
+ * =========================================================
+ * PROJETO: Contador de Formatos do Instagram
+ * AUTOR: João Gabriel Santana Chaves
+ *
+ * DESCRIÇÃO:
+ * Este script percorre a coluna I da planilha ativa e
+ * contabiliza a quantidade de publicações por formato:
+ * - Carrossel do Instagram
+ * - Imagem do Instagram
+ * - Reel do Instagram
+ *
+ * OBJETIVO:
+ * Automatizar a contagem de formatos de conteúdo para
+ * apoiar análises editoriais, relatórios de desempenho e
+ * dashboards de redes sociais.
+ *
+ * TECNOLOGIA:
+ * Google Apps Script (JavaScript)
+ * =========================================================
+ */
+
+function contarTiposConteudoInstagram() {
+
+  // Obtém a aba ativa
+  const aba = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+
+  // Última linha preenchida
+  const ultimaLinha = aba.getLastRow();
+
+  // Lê a coluna I, ignorando o cabeçalho
+  const valores = aba.getRange(2, 9, ultimaLinha - 1, 1).getValues().flat();
+
+  let carrossel = 0;
+  let imagem = 0;
+  let reel = 0;
+
+  valores.forEach(valor => {
+    valor = String(valor).toLowerCase();
+
+    if (valor.includes("carrossel")) carrossel++;
+    if (valor.includes("imagem")) imagem++;
+    if (valor.includes("reel")) reel++;
+  });
+
+  Logger.log({
+    "Carrossel do Instagram": carrossel,
+    "Imagem do Instagram": imagem,
+    "Reel do Instagram": reel
+  });
+}
