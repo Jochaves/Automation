@@ -1,0 +1,52 @@
+Sub ConsolidarMetricasGTA6()
+
+' =========================================================================
+' CONSOLIDAÇÃO DE MÉTRICAS DOS CONTEÚDOS FILTRADOS
+' =========================================================================
+'
+' Problema:
+' Após identificar as matérias relacionadas ao GTA 6, era necessário
+' consolidar rapidamente os indicadores de desempenho para análise.
+'
+' Solução:
+' A macro calcula a soma das métricas apenas das linhas visíveis após
+' a aplicação do filtro temático e registra os resultados na planilha
+' "Consolidado".
+'
+' Métricas consolidadas:
+' - Visualizações (coluna L)
+' - Alcance (coluna M)
+' - Engajamento (soma das colunas N, O, Q e R)
+'
+' Benefício:
+' Automatiza a consolidação dos indicadores, reduzindo o trabalho manual
+' e o risco de erros durante a análise de performance dos conteúdos.
+' =========================================================================
+
+    Dim wsConsolidado As Worksheet
+
+    Dim somaVisualizacoes As Double
+    Dim somaAlcance As Double
+    Dim somaEngajamento As Double
+
+    Set wsConsolidado = Worksheets("Consolidado")
+
+    ' Soma apenas as linhas visíveis após o filtro
+    somaVisualizacoes = Application.WorksheetFunction.Subtotal(109, Range("L:L"))
+
+    somaAlcance = Application.WorksheetFunction.Subtotal(109, Range("M:M"))
+
+    somaEngajamento = _
+        Application.WorksheetFunction.Subtotal(109, Range("N:N")) + _
+        Application.WorksheetFunction.Subtotal(109, Range("O:O")) + _
+        Application.WorksheetFunction.Subtotal(109, Range("Q:Q")) + _
+        Application.WorksheetFunction.Subtotal(109, Range("R:R"))
+
+    ' Grava os resultados na aba Consolidado
+    wsConsolidado.Range("B2").Value = somaVisualizacoes
+    wsConsolidado.Range("B3").Value = somaAlcance
+    wsConsolidado.Range("B4").Value = somaEngajamento
+
+    MsgBox "Dados consolidados com sucesso!"
+
+End Sub
