@@ -1,59 +1,59 @@
 Sub FiltrarGTA6()
 
-    '=========================================================================
-    ' OBJETIVO
-    '-------------------------------------------------------------------------
-    ' Filtrar automaticamente conteúdos relacionados ao GTA 6 em uma base
-    ' editorial do TechTudo.
+    ' =========================================================================
+    ' FILTRO DE CONTEÚDOS SOBRE GTA 6
+    ' =========================================================================
     '
-    ' PROBLEMÁTICA
-    '-------------------------------------------------------------------------
-    ' Durante análises de conteúdo, nem todas as matérias utilizam o termo
-    ' "GTA 6" no título. Algumas publicações podem citar apenas variações
-    ' como "GTA VI", "Grand Theft Auto VI", "Vice City", "Lucia",
-    ' "Jason" ou referências à desenvolvedora Rockstar Games.
+    ' Problema:
+    ' Durante análises editoriais do TechTudo, conteúdos sobre GTA 6 podem ser
+    ' publicados utilizando diferentes termos, como "GTA VI", "Vice City",
+    ' "Rockstar", "Lucia" ou "Jason". Isso torna a identificação manual das
+    ' matérias mais lenta e sujeita a falhas.
     '
-    ' A identificação manual desses conteúdos torna o processo mais lento
-    ' e aumenta o risco de deixar matérias relevantes fora da análise.
+    ' Solução:
+    ' A macro percorre os títulos da coluna E e mantém visíveis apenas as
+    ' linhas que contenham palavras-chave relacionadas ao universo de GTA 6.
     '
-    ' SOLUÇÃO
-    '-------------------------------------------------------------------------
-    ' Aplicar um filtro na coluna E utilizando múltiplas palavras-chave
-    ' relacionadas ao universo de GTA 6, permitindo localizar rapidamente
-    ' todos os conteúdos associados ao tema.
+    ' Benefícios:
+    ' - Reduz o tempo de filtragem manual.
+    ' - Padroniza a coleta de conteúdos.
+    ' - Minimiza perdas de matérias relevantes na análise.
     '
-    ' BENEFÍCIOS
-    '-------------------------------------------------------------------------
-    ' - Reduz o tempo gasto com filtragem manual.
-    ' - Padroniza o processo de coleta de conteúdos.
-    ' - Facilita análises editoriais e relatórios temáticos.
-    ' - Permite expandir facilmente a lista de palavras-chave.
-    '=========================================================================
+    ' =========================================================================
 
-    Dim ws As Worksheet
-    Set ws = ActiveSheet
+    Dim ultimaLinha As Long
+    Dim i As Long
+    Dim texto As String
+    Dim encontrou As Boolean
 
-    ' Remove filtros existentes para evitar conflitos
-    If ws.AutoFilterMode Then ws.AutoFilterMode = False
+    ultimaLinha = Cells(Rows.Count, "E").End(xlUp).Row
 
-    ' Aplica filtro na coluna E (Field:=5)
-    ' Considera diferentes formas de menção ao GTA 6
-    ws.Range("A1").CurrentRegion.AutoFilter _
-        Field:=5, _
-        Criteria1:=Array( _
-            "*GTA 6*", _
-            "*GTA VI*", _
-            "*Grand Theft Auto 6*", _
-            "*Grand Theft Auto VI*", _
-            "*Rockstar*", _
-            "*Rockstar Games*", _
-            "*Vice City*", _
-            "*Lucia*", _
-            "*Jason*", _
-            "*Take-Two*", _
-            "*Take Two*", _
-            "*Take-Two Interactive*" _
-        ), _
-        Operator:=xlFilterValues
+    ' Exibe todas as linhas antes de aplicar o filtro
+    Rows.Hidden = False
+
+    For i = 2 To ultimaLinha
+
+        texto = LCase(Cells(i, "E").Value)
+
+        ' Verifica se o título contém alguma palavra-chave relacionada ao GTA 6
+        encontrou = _
+            InStr(texto, "gta 6") > 0 Or _
+            InStr(texto, "gta vi") > 0 Or _
+            InStr(texto, "grand theft auto") > 0 Or _
+            InStr(texto, "vice city") > 0 Or _
+            InStr(texto, "lucia") > 0 Or _
+            InStr(texto, "jason") > 0 Or _
+            InStr(texto, "rockstar") > 0 Or _
+            InStr(texto, "take-two") > 0 Or _
+            InStr(texto, "take two") > 0
+
+        ' Oculta linhas que não possuem relação com o tema
+        If Not encontrou Then
+            Rows(i).Hidden = True
+        End If
+
+    Next i
+
+    MsgBox "Filtro aplicado!"
 
 End Sub
